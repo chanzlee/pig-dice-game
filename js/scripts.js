@@ -1,20 +1,37 @@
 players={};
+var turnScore = 0;
 
-var Player = function (id){
+var Player = function (name,id){
+  this.name= name;
   this.id= id;
   this.bankscore= 0;
 }
-var playerOne = new Player(0);
-var playerTwo = new Player(1);
 
-players[playerOne.id] = playerOne;
-players[playerTwo.id] = playerTwo;
+Player.prototype.hold =function (){
+  this.bankscore += turnScore;
+  $(".bankscore-"+currentlyPlayingId).text(" "+this.bankscore);
+  turnScore = 0;
+  $(".turnscore-"+currentlyPlayingId).text(" "+turnScore);
+  switchPlayer();
+}
 
-console.log(players[0],players[1]);
+var createPlayer =function (){
+  playerOne = new Player("player1",0);
+  playerTwo = new Player("player2",1);
+
+  players[playerOne.id] = playerOne;
+  players[playerTwo.id] = playerTwo;
+}
+
+var initiateGame = function (){
+  currentlyPlayingId = 0;
+  currentlyPlaying = players[currentlyPlayingId]
+}
 
 
-var currentlyPlayingId = 0;
-var currentlyPlaying = players[currentlyPlayingId];
+var whosTurn = function (){
+  $(".whosturn").text(" "+currentlyPlaying.name.toUpperCase())
+}
 
 var switchPlayer = function (){
   if(currentlyPlayingId === 0){
@@ -22,54 +39,35 @@ var switchPlayer = function (){
   } else {
     currentlyPlayingId = 0;
   }
-  alert("switchPlayered" +  currentlyPlayingId)
+  currentlyPlaying = players[currentlyPlayingId];
+  alert("Turn Over!");
+  whosTurn();
 }
 
 var roll = function(){
-  alert(currentlyPlayingId);
   random();
-  if(result===1 || result===6){
-    var turnScore = 0;
-    alert("turnscore="+turnScore);
+  if(result===1){
+    turnScore = 0;
+    $(".turnscore-"+currentlyPlayingId).text(" "+turnScore);
     switchPlayer();
   } else {
-    var turnScore += result;
-    alert("turnscore="+turnScore);
+    turnScore += result;
+    $(".turnscore-"+currentlyPlayingId).text(" "+turnScore);
   }
 }
 
-var turnScore = 0;
+
 
 var random = function() {
   result= Math.floor(Math.random()*6)+1;
+  $(".dicevalue-"+currentlyPlayingId).text(" "+result);
   return result;
 }
 
-// var roll = function() {
-//   random();
-//   if(result===1 || result===6){
-//     turnScore = 0;
-//     alert("turnscore="+turnScore);
-//     bankScore +=turnScore
-//     // there will be a end turn
-//
-//   } else {
-//     turnScore += result;
-//     alert("turnscore="+turnScore);
-//   }
-// }
-
-Player.prototype.hold =function (){
-  // players{0: playerOne 1:playerTwo}
-  //currentlyPlaying is object!
-
-  this.bankScore += turnScore;
-  switchPlayer();
-}
-
-
-
 $(document).ready(function(){
+  createPlayer();
+  initiateGame();
+  whosTurn();
   $("#roll").submit(function(event){
     event.preventDefault();
     roll();
@@ -77,5 +75,6 @@ $(document).ready(function(){
   $("#hold").submit(function(event){
     event.preventDefault();
     currentlyPlaying.hold();
+    whosTurn();
   });
 });
