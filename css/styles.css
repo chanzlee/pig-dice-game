@@ -1,33 +1,5 @@
-.login {
-  display: none;
-}
-
-#login-link, #signup-link {
-  cursor: pointer;
-  color: #0088cc;
-}
-
-#login-link:hover, #signup-link:hover {
-  text-decoration: underline;
-}
-
-img {
-  display: inline-block;
-  width: 60px;
-  height: 35px;
-}
 
 h1 {
   padding-top: 50px;
   padding-bottom: 50px;
-}
-
-button {
-  float: right;
-}
-
-img.hidden {
-  display: none;
-  width: 100%;
-  height: auto;
 }
